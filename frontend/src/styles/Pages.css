@@ -1,0 +1,16 @@
+body {
+  background-color: #945f65 !important;
+  font-family: 'Roboto', sans-serif;
+}
+.login-container {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  height: 100vh;
+
+}
+
+.login-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  
+}
