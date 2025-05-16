@@ -6,11 +6,11 @@ const db = require("../db");
 const router = express.Router();
 
 router.post("/register", (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
   const hash = bcrypt.hashSync(password, 10);
   db.query(
-    "INSERT INTO users (username, password) VALUES (?, ?)",
-    [username, hash],
+    "INSERT INTO users (username,email, password) VALUES (?, ?,?)",
+    [username, email, hash],
     (err, result) => {
       if (err)
         return res.status(400).json({ error: "Utilisateur existe déjà" });
