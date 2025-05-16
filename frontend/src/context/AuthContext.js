@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
       const res = await API.get("/auth/profile");
       setUser(res.data.user);
     } catch {
-      setUser(null); // pas de token ou token invalide
+      setUser(null);
     }
   };
 
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
-    setTimeout(() => navigate("/login"), 1500); // Redirige après succès
+    setTimeout(() => navigate("/login"), 1500);
   };
 
   return (

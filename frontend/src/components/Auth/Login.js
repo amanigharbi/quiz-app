@@ -147,10 +147,9 @@ function Login() {
               >
                 Se connecter
               </MDBBtn>
-
-              <a className="small text-muted" href="#!">
+              <Link to="/forgot-password" style={{ color: "#393f81" }}>
                 Mot de passe oublié ?
-              </a>
+              </Link>
 
               <p className="mb-5 pb-lg-2" style={{ color: "#393f81" }}>
                 Vous n'avez pas de compte ?{" "}
