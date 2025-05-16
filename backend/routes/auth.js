@@ -20,10 +20,11 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-  const { username, password } = req.body;
+  const { emailOrUsername, password } = req.body;
+  console.log("userrr ", emailOrUsername);
   db.query(
-    "SELECT * FROM users WHERE username = ?",
-    [username],
+    "SELECT * FROM users WHERE email = ? OR username = ?",
+    [emailOrUsername, emailOrUsername],
     (err, results) => {
       if (err || results.length === 0)
         return res.status(401).json({ error: "Utilisateur introuvable" });
@@ -38,7 +39,14 @@ router.post("/login", (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "2h" }
       );
-      res.json({ token });
+      res.json({
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+        },
+      });
     }
   );
 });

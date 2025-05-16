@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MDBBtn,
   MDBContainer,
@@ -7,14 +7,66 @@ import {
   MDBCardImage,
   MDBRow,
   MDBCol,
-  MDBIcon,
   MDBInput,
 } from "mdb-react-ui-kit";
-import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+import { Link, useNavigate } from "react-router-dom";
+import Alert from "react-bootstrap/Alert";
 
 import "../../styles/Pages.css";
 
 function Login() {
+  const [emailOrUsername, setEmailOrUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const navigate = useNavigate();
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const handleLogin = async () => {
+    setError("");
+    setSuccess("");
+
+    if (!emailOrUsername || !password) {
+      setError("Veuillez remplir tous les champs.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ emailOrUsername, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Erreur lors de la connexion.");
+        return;
+      }
+
+      setSuccess("Connexion réussie !");
+      localStorage.setItem("token", data.token);
+      setTimeout(() => navigate("/profile"), 1500); // Redirige après succès
+    } catch (err) {
+      setError("Erreur de connexion au serveur.");
+    }
+  };
+  const iconStyle = {
+    position: "absolute",
+    right: "15px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    cursor: "pointer",
+    zIndex: 2,
+  };
   return (
     <MDBContainer
       fluid
@@ -40,29 +92,59 @@ function Login() {
                 <img src="/logo.png" alt="Logo" style={{ height: "120px" }} />
               </div>
 
-              <h5
-                className="fw-normal mb-4 pb-3"
-                style={{ letterSpacing: "1px" }}
-              >
+              <h5 className="fw-normal mb-4 pb-3">
                 Connectez-vous à votre compte
               </h5>
 
+              {success && (
+                <Alert variant="success" style={{ textAlign: "center" }}>
+                  {success}
+                </Alert>
+              )}
+              {error && (
+                <Alert variant="danger" style={{ textAlign: "center" }}>
+                  {error}
+                </Alert>
+              )}
+
               <MDBInput
                 wrapperClass="mb-4"
-                label="Adresse email"
-                id="email"
-                type="email"
+                label="Email ou nom d'utilisateur"
+                id="emailOrUsername"
+                type="text"
                 size="lg"
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Mot de passe"
-                id="password"
-                type="password"
-                size="lg"
+                value={emailOrUsername}
+                onChange={(e) => setEmailOrUsername(e.target.value)}
               />
 
-              <MDBBtn className="mb-4 px-5" color="dark" size="lg">
+              <div className="position-relative mb-4">
+                <MDBInput
+                  label="Mot de passe"
+                  id="password"
+                  type={passwordVisible ? "text" : "password"}
+                  size="lg"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                {passwordVisible ? (
+                  <FaEyeSlash
+                    style={iconStyle}
+                    onClick={() => setPasswordVisible(false)}
+                  />
+                ) : (
+                  <FaEye
+                    style={iconStyle}
+                    onClick={() => setPasswordVisible(true)}
+                  />
+                )}
+              </div>
+
+              <MDBBtn
+                className="mb-4 px-5"
+                color="dark"
+                size="lg"
+                onClick={handleLogin}
+              >
                 Se connecter
               </MDBBtn>
 
