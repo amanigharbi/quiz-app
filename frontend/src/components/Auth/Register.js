@@ -75,7 +75,7 @@ const Register = () => {
         return;
       }
 
-      setSuccess("Inscription réussie !");
+      setSuccess("Inscription réussie ! Redirection...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       setError("Erreur de connexion au serveur.");

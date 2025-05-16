@@ -1,28 +1,58 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBCard,
+  MDBCardBody,
+  MDBCardImage,
+  MDBRow,
+  MDBCol,
+  MDBInput,
+} from "mdb-react-ui-kit";
 import { useParams, useNavigate } from "react-router-dom";
-import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 import Alert from "react-bootstrap/Alert";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const API_URL = process.env.REACT_APP_API_URL;
-
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const evaluatePasswordStrength = (pwd) => {
+    let score = 0;
+    if (!pwd) return 0;
+    if (pwd.length >= 6) score++;
+    if (/[A-Z]/.test(pwd)) score++;
+    if (/[0-9]/.test(pwd)) score++;
+    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+    return score;
+  };
   const handleReset = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
 
-    if (!password || password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères.");
-      return;
+    if (!password || !confirmPassword) {
+      return setError("Veuillez remplir tous les champs.");
     }
-    setLoading(true);
 
+    if (password.length < 6) {
+      return setError("Le mot de passe doit contenir au moins 6 caractères.");
+    }
+
+    if (password !== confirmPassword) {
+      return setError("Les mots de passe ne correspondent pas.");
+    }
+
+    setLoading(true);
     try {
       const res = await fetch(`${API_URL}/auth/reset-password/${token}`, {
         method: "POST",
@@ -35,37 +65,144 @@ export default function ResetPassword() {
         setError(data.error || "Erreur lors de la réinitialisation.");
       } else {
         setMessage("Mot de passe mis à jour. Redirection...");
-        setTimeout(() => navigate("/login"), 1500);
+        setTimeout(() => navigate("/login"), 2000);
       }
-    } catch (err) {
-      setError("Erreur de connexion");
+    } catch {
+      setError("Erreur de connexion au serveur.");
     } finally {
       setLoading(false);
     }
   };
 
+  const iconStyle = {
+    position: "absolute",
+    right: "15px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    cursor: "pointer",
+    zIndex: 2,
+  };
+
   return (
-    <MDBContainer className="mt-5" style={{ maxWidth: "400px" }}>
-      <h4>Réinitialiser le mot de passe</h4>
+    <MDBContainer
+      fluid
+      className="login-container d-flex justify-content-center"
+    >
+      <MDBCard
+        className="login-card rounded-5 shadow"
+        style={{ maxWidth: "900px" }}
+      >
+        <MDBRow className="g-0">
+          <MDBCol md="6">
+            <MDBCardImage
+              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
+              alt="reset"
+              className="rounded-start w-100"
+              style={{ objectFit: "cover", height: "100%" }}
+            />
+          </MDBCol>
 
-      {message && <Alert variant="success">{message}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
+          <MDBCol md="6">
+            <MDBCardBody className="d-flex flex-column justify-content-center px-5">
+              <div className="d-flex justify-content-center align-items-center">
+                <img src="/logo.png" alt="Logo" style={{ height: "120px" }} />
+              </div>
+              <h5 className="fw-normal mb-4 pb-3 text-center">
+                Réinitialiser votre mot de passe
+              </h5>
 
-      <form onSubmit={handleReset}>
-        <MDBInput
-          label="Nouveau mot de passe"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mb-3"
-          required
-          minLength={6}
-        />
+              {message && <Alert variant="success">{message}</Alert>}
+              {error && <Alert variant="danger">{error}</Alert>}
 
-        <MDBBtn type="submit" disabled={loading} className="w-100">
-          {loading ? "Chargement..." : "Changer le mot de passe"}
-        </MDBBtn>
-      </form>
+              <form onSubmit={handleReset}>
+                <div className="position-relative mb-4">
+                  <MDBInput
+                    label="Nouveau mot de passe"
+                    type={passwordVisible ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setPassword(val);
+                      setPasswordStrength(evaluatePasswordStrength(val));
+                    }}
+                    required
+                  />
+                  {passwordVisible ? (
+                    <FaEyeSlash
+                      style={iconStyle}
+                      onClick={() => setPasswordVisible(false)}
+                    />
+                  ) : (
+                    <FaEye
+                      style={iconStyle}
+                      onClick={() => setPasswordVisible(true)}
+                    />
+                  )}
+                </div>
+                {password && (
+                  <div className="mt-2">
+                    <div className="progress" style={{ height: "6px" }}>
+                      <div
+                        className={`progress-bar ${
+                          passwordStrength <= 1
+                            ? "bg-danger"
+                            : passwordStrength === 2
+                            ? "bg-warning"
+                            : "bg-success"
+                        }`}
+                        role="progressbar"
+                        style={{ width: `${(passwordStrength / 4) * 100}%` }}
+                        aria-valuenow={passwordStrength}
+                        aria-valuemin="0"
+                        aria-valuemax="4"
+                      ></div>
+                    </div>
+                    <small className="text-muted">
+                      {passwordStrength === 0 && "Trop faible"}
+                      {passwordStrength === 1 && "Faible"}
+                      {passwordStrength === 2 && "Moyen"}
+                      {passwordStrength >= 3 && "Fort"}
+                    </small>
+                  </div>
+                )}
+                <div className="position-relative mb-4">
+                  <MDBInput
+                    label="Confirmer le mot de passe"
+                    type={confirmPasswordVisible ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                  {confirmPasswordVisible ? (
+                    <FaEyeSlash
+                      style={iconStyle}
+                      onClick={() => setConfirmPasswordVisible(false)}
+                    />
+                  ) : (
+                    <FaEye
+                      style={iconStyle}
+                      onClick={() => setConfirmPasswordVisible(true)}
+                    />
+                  )}
+                </div>
+
+                <MDBBtn type="submit" disabled={loading} className="w-100 mb-4">
+                  {loading ? "En cours..." : "Changer le mot de passe"}
+                </MDBBtn>
+              </form>
+
+              <div className="d-flex flex-row justify-content-start">
+                <a href="#" className="small text-muted me-1">
+                  Conditions d'utilisation.
+                </a>
+                <a href="#" className="small text-muted">
+                  Politique de confidentialité
+                </a>
+              </div>
+            </MDBCardBody>
+          </MDBCol>
+        </MDBRow>
+      </MDBCard>
     </MDBContainer>
   );
 }
