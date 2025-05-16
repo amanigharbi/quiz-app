@@ -54,7 +54,7 @@ function Login() {
 
       setSuccess("Connexion réussie ! Redirection...");
       localStorage.setItem("token", data.token);
-      setTimeout(() => navigate("/profile"), 1500); // Redirige après succès
+      setTimeout(() => navigate("/dashboard"), 1500); 
     } catch (err) {
       setError("Erreur de connexion au serveur.");
     }

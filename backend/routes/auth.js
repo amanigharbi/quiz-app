@@ -114,14 +114,14 @@ router.post("/reset-password/:token", async (req, res) => {
   }
 });
 
-router.get("/profile", (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Token manquant" });
+// router.get("/profile", (req, res) => {
+//   const token = req.headers.authorization?.split(" ")[1];
+//   if (!token) return res.status(401).json({ error: "Token manquant" });
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ error: "Token invalide" });
-    res.json({ user });
-  });
-});
+//   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+//     if (err) return res.status(403).json({ error: "Token invalide" });
+//     res.json({ user });
+//   });
+// });
 
 module.exports = router;
