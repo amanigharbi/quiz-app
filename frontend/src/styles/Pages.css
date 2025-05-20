@@ -1,4 +1,4 @@
-body {
+.body {
   background-color: #945f65 !important;
   font-family: 'Roboto', sans-serif;
 }
@@ -20,4 +20,8 @@ body {
 }
 .progress-bar {
   transition: width 0.5s ease;
+}
+body {
+  background-color: "#eeeeee" !important;
+  font-family: 'Roboto', sans-serif;
 }

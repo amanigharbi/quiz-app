@@ -54,7 +54,7 @@ function Login() {
 
       setSuccess("Connexion réussie ! Redirection...");
       localStorage.setItem("token", data.token);
-      setTimeout(() => navigate("/dashboard"), 1500); 
+      setTimeout(() => navigate("/dashboard"), 1500);
     } catch (err) {
       setError("Erreur de connexion au serveur.");
     }
@@ -70,7 +70,7 @@ function Login() {
   return (
     <MDBContainer
       fluid
-      className="login-container d-flex justify-content-center"
+      className="login-container d-flex justify-content-center body"
     >
       <MDBCard
         className="login-card rounded-5 shadow"

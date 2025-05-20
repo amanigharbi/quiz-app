@@ -53,7 +53,7 @@ export default function ForgotPassword() {
   return (
     <MDBContainer
       fluid
-      className="login-container d-flex justify-content-center"
+      className="login-container d-flex justify-content-center body"
     >
       <MDBCard
         className="login-card rounded-5 shadow"

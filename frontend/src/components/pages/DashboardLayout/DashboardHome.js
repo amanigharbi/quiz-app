@@ -1,4 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
+import image from "../../../assets/quiz-illustration.svg";
+import { Gamepad2, PlusCircle, BarChart2 } from "lucide-react";
 
 export default function DashboardHome({ username }) {
   return (
@@ -6,20 +8,21 @@ export default function DashboardHome({ username }) {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="p-8 text-center"
+      className="p-8 text-center " style={{height: "79.8vh"}}
     >
-      <h1 className="text-3xl font-bold mb-4">Bienvenue, {username} !</h1>
-      <p className="mb-6">Choisissez une action pour commencer :</p>
+      <img src={image} alt="Logo" className="w-60 mx-auto mb-2" />
+      <h1 className="text-3xl font-bold mb-2">Bienvenue, {username} !</h1>
+      <p className="mb-3">Choisissez une action pour commencer :</p>
 
-      <div className="flex justify-center gap-4 flex-wrap">
-        <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl shadow">
-          🎮 Rejoindre Quiz
-        </button>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl shadow">
-          ➕ Créer Quiz
-        </button>
-        <button className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-xl shadow">
-          📊 Voir Scores
+      <div className="flex justify-center gap-x-6 gap-y-4 flex-wrap mt-4">
+        <button className="btn btn-primary flex items-center gap-2">
+          <Gamepad2 size={18} /> Rejoindre Quiz
+        </button>{" "}
+        <button className="btn btn-primary flex items-center gap-2">
+          <PlusCircle size={18} /> Créer Quiz
+        </button>{" "}
+        <button className="btn btn-primary flex items-center gap-2">
+          <BarChart2 size={18} /> Voir Scores
         </button>
       </div>
     </motion.div>
