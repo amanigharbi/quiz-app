@@ -6,6 +6,7 @@ export default function PrivateRoute({ children }) {
   const { user } = useContext(AuthContext);
 
   // Redirige vers /login si l'utilisateur n'est pas connecté
+  console.log("PrivateRoute user:", user);
   if (!user) {
     return <Navigate to="/login" replace />;
   }

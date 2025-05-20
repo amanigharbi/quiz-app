@@ -13,6 +13,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 import "../../styles/Pages.css";
 
@@ -26,6 +28,7 @@ function Login() {
 
   const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
+  const { setUser } = useContext(AuthContext);
 
   const handleLogin = async () => {
     setError("");
@@ -51,9 +54,11 @@ function Login() {
         setError(data.error || "Erreur lors de la connexion.");
         return;
       }
+      console.log("Token:", data.user);
 
       setSuccess("Connexion réussie ! Redirection...");
       localStorage.setItem("token", data.token);
+      setUser(data.user);
       setTimeout(() => navigate("/dashboard"), 1500);
     } catch (err) {
       setError("Erreur de connexion au serveur.");

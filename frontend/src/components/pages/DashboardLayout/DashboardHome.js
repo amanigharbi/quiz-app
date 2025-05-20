@@ -1,17 +1,23 @@
 import { motion } from "framer-motion";
 import image from "../../../assets/quiz-illustration.svg";
 import { Gamepad2, PlusCircle, BarChart2 } from "lucide-react";
+import { useContext } from "react";
+import { AuthContext } from "../../../context/AuthContext";
+export default function DashboardHome() {
+  const { user } = useContext(AuthContext);
 
-export default function DashboardHome({ username }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="p-8 text-center " style={{height: "79.8vh"}}
+      className="p-8 text-center "
+      style={{ height: "79.8vh" }}
     >
       <img src={image} alt="Logo" className="w-60 mx-auto mb-2" />
-      <h1 className="text-3xl font-bold mb-2">Bienvenue, {username} !</h1>
+      <h1 className="text-3xl font-bold mb-2">
+        Bienvenue, {user?.username || "Utilisateur"} !
+      </h1>
       <p className="mb-3">Choisissez une action pour commencer :</p>
 
       <div className="flex justify-center gap-x-6 gap-y-4 flex-wrap mt-4">
