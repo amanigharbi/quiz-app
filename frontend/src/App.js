@@ -8,6 +8,7 @@ import Dashboard from "./components/pages/DashboardLayout/Dashboard";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import CreateQuiz from "./components/pages/Quizzes/CreateQuiz";
 import AddQuestions from "./components/pages/Quizzes/AddQuestions";
+import CreateQuizStepper from "./components/pages/Quizzes/CreateQuizStepper";
 
 import "./App.css";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
@@ -30,11 +31,19 @@ export default function App() {
               </PrivateRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/create-quiz"
             element={
               <PrivateRoute>
                 <CreateQuiz />
+              </PrivateRoute>
+            }
+          /> */}
+          <Route
+            path="/create-quiz"
+            element={
+              <PrivateRoute>
+                <CreateQuizStepper />
               </PrivateRoute>
             }
           />

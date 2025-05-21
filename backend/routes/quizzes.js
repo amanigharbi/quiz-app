@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../db"); // Connexion MySQL (mysql2 ou autre)
 
 router.post("/", async (req, res) => {
-  const { title, user_id } = req.body;
+  const { title,description, user_id } = req.body;
 
   if (!title || !user_id) {
     return res.status(400).json({ error: "Titre et user_id requis." });
@@ -11,8 +11,8 @@ router.post("/", async (req, res) => {
 
   try {
     const [result] = await db.execute(
-      "INSERT INTO quizzes (title, user_id) VALUES (?, ?)",
-      [title, user_id]
+      "INSERT INTO quizzes (title,description, user_id) VALUES (?, ?,?)",
+      [title,description, user_id]
     );
 
     res.status(201).json({
