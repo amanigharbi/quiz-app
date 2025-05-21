@@ -6,7 +6,7 @@ export default function PrivateRoute({ children }) {
   const { user, isLoading } = useContext(AuthContext);
 
   if (isLoading) {
-    return <div>Chargement...</div>; // ou un spinner
+    return <div>Chargement...</div>;
   }
 
   if (user === null) {

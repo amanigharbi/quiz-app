@@ -38,7 +38,7 @@ export default function Navbar() {
             </li>
             <li className="nav-item">
               <a className="nav-link" href="#">
-                Mon Profil
+                Historique des Quizes
               </a>
             </li>
           </ul>

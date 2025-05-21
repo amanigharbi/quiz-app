@@ -3,8 +3,11 @@ import image from "../../../assets/quiz-illustration.svg";
 import { Gamepad2, PlusCircle, BarChart2 } from "lucide-react";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 export default function DashboardHome() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <motion.div
@@ -24,7 +27,10 @@ export default function DashboardHome() {
         <button className="btn btn-primary flex items-center gap-2">
           <Gamepad2 size={18} /> Rejoindre Quiz
         </button>{" "}
-        <button className="btn btn-primary flex items-center gap-2">
+        <button
+          className="btn btn-primary flex items-center gap-2"
+          onClick={() => navigate("/create-quiz")}
+        >
           <PlusCircle size={18} /> Créer Quiz
         </button>{" "}
         <button className="btn btn-primary flex items-center gap-2">

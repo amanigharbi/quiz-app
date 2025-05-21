@@ -1,10 +1,8 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import DashboardHome from "./DashboardHome";
-import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-  const navigate = useNavigate();
 
   return (
     <div
