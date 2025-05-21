@@ -35,7 +35,10 @@ export default function QuizStepView() {
   if (!current) return <p className="text-center mt-4">Chargement...</p>;
 
   return (
-    <div className="min-h-screen flex flex-col bg-light">
+    <div
+      className="min-h-screen flex flex-col "
+      style={{ backgroundColor: "#eeeeee" }}
+    >
       <Navbar />
       <MDBContainer className="py-5 flex-grow-1">
         <MDBCard className="mx-auto" style={{ maxWidth: "800px" }}>

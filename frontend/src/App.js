@@ -10,6 +10,7 @@ import AddQuestions from "./components/pages/Quizzes/AddQuestions";
 import CreateQuizStepper from "./components/pages/Quizzes/CreateQuizStepper";
 import QuizSummary from "./components/pages/Quizzes/QuizSummary";
 import QuizStepView from "./components/pages/Quizzes/QuizStepView";
+import EditQuestion from "./components/pages/Quizzes/EditQuestion";
 
 import "./App.css";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
@@ -65,6 +66,10 @@ export default function App() {
               </PrivateRoute>
             }
           />
+          <Route
+  path="/quizzes/:id/questions/:questionId/edit"
+  element={<EditQuestion />}
+/>
         </Routes>
       </AuthProvider>
     </Router>

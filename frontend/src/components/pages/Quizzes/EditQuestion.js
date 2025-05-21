@@ -1,32 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   MDBContainer,
   MDBCard,
   MDBCardBody,
-  MDBTextArea,
   MDBInput,
   MDBCheckbox,
   MDBBtn,
-  MDBProgress,
+  MDBSpinner,
 } from "mdb-react-ui-kit";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 
-export default function AddQuestions() {
-  const { id: quizId } = useParams();
-  const navigate = useNavigate();
+export default function EditQuestion() {
+  const { id: quizId, questionId } = useParams();
   const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
 
   const [questionText, setQuestionText] = useState("");
-  const [answers, setAnswers] = useState([
-    { text: "", is_correct: false },
-    { text: "", is_correct: false },
-  ]);
+  const [answers, setAnswers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
-  const [step, setStep] = useState(1);
-  const [totalQuestions, setTotalQuestions] = useState(0);
-  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch(`${API_URL}/quizzes/${quizId}/questions`)
+      .then((res) => res.json())
+      .then((data) => {
+        const question = data.find((q) => q.id === parseInt(questionId));
+        if (question) {
+          setQuestionText(question.question_text);
+          setAnswers(
+            question.answers.map((a) => ({
+              id: a.id,
+              text: a.answer_text,
+              is_correct: a.is_correct,
+            }))
+          );
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [quizId, questionId]);
 
   const handleAnswerChange = (index, key, value) => {
     const updated = [...answers];
@@ -40,30 +54,20 @@ export default function AddQuestions() {
 
   const handleRemoveAnswer = (index) => {
     if (answers.length <= 2) {
-      setMessage("❌ Il faut au moins deux réponses.");
+      alert("Il faut au moins 2 réponses.");
       return;
     }
     const updated = answers.filter((_, i) => i !== index);
     setAnswers(updated);
   };
 
-  const resetForm = () => {
-    setQuestionText("");
-    setAnswers([
-      { text: "", is_correct: false },
-      { text: "", is_correct: false },
-    ]);
-    setStep((prev) => prev + 1);
-    setTotalQuestions((prev) => prev + 1);
-    setMessage("");
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
 
-    if (!questionText.trim()) {
-      setMessage("❌ Le texte de la question est requis.");
+    const hasCorrect = answers.some((a) => a.is_correct);
+    if (!hasCorrect) {
+      setMessage("❌ Au moins une réponse correcte est requise.");
       return;
     }
 
@@ -72,22 +76,17 @@ export default function AddQuestions() {
       return;
     }
 
-    const hasCorrect = answers.some((a) => a.is_correct);
-    if (!hasCorrect) {
-      setMessage("❌ Une réponse correcte est requise.");
-      return;
-    }
-
     setLoading(true);
-
     try {
-      const res = await fetch(`${API_URL}/questions`, {
-        method: "POST",
+      const res = await fetch(`${API_URL}/quizzes/${questionId}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          quiz_id: quizId,
           question_text: questionText,
-          answers,
+          answers: answers.map((a) => ({
+            text: a.text,
+            is_correct: a.is_correct,
+          })),
         }),
       });
 
@@ -95,37 +94,33 @@ export default function AddQuestions() {
       setLoading(false);
 
       if (!res.ok) {
-        setMessage("❌ " + (data.error || "Erreur lors de l'ajout"));
+        setMessage("❌ " + (data.error || "Erreur lors de la mise à jour."));
         return;
       }
 
-      setMessage("✅ Question ajoutée !");
-      resetForm();
+      setMessage("✅ Question mise à jour !");
+      setTimeout(() => navigate(`/quizzes/${quizId}/summary`), 1500);
     } catch (err) {
       setLoading(false);
       setMessage("❌ Erreur serveur.");
     }
   };
 
+  if (loading) {
+    return (
+      <div className="text-center mt-5">
+        <MDBSpinner />
+      </div>
+    );
+  }
+
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ backgroundColor: "#eeeeee" }}
-    >
+    <div className="min-h-screen flex flex-col bg-light">
       <Navbar />
       <MDBContainer className="py-5 flex-grow-1">
         <MDBCard className="mx-auto" style={{ maxWidth: "800px" }}>
           <MDBCardBody>
-            <h3 className="text-center fw-bold mb-3">
-              Étape {step} — Nouvelle Question
-            </h3>
-
-            <MDBProgress height="8" className="mb-4">
-              <div
-                className="progress-bar"
-                style={{ width: `${Math.min(step * 20, 100)}%` }}
-              />
-            </MDBProgress>
+            <h3 className="text-center fw-bold mb-3">Modifier la Question</h3>
 
             {message && (
               <div
@@ -138,10 +133,9 @@ export default function AddQuestions() {
             )}
 
             <form onSubmit={handleSubmit}>
-              <MDBTextArea
+              <MDBInput
                 label="Texte de la question"
                 value={questionText}
-                rows={3}
                 onChange={(e) => setQuestionText(e.target.value)}
                 className="mb-4"
               />
@@ -181,31 +175,27 @@ export default function AddQuestions() {
 
               <MDBBtn
                 type="button"
-                outline
                 color="info"
+                outline
                 onClick={handleAddAnswer}
                 className="w-100 mb-3"
               >
                 ➕ Ajouter une réponse
               </MDBBtn>
 
+              <MDBBtn type="submit" className="w-100" disabled={loading}>
+                {loading ? "Mise à jour..." : "Mettre à jour la question"}
+              </MDBBtn>
+
               <MDBBtn
-                type="submit"
-                className="w-100"
-                disabled={loading || !questionText.trim()}
+                outline
+                color="secondary"
+                className="w-100 mt-3"
+                onClick={() => navigate(`/quizzes/${quizId}/summary`)}
               >
-                {loading ? "Ajout en cours..." : "Ajouter la question"}
+                Annuler & Retour
               </MDBBtn>
             </form>
-
-            <MDBBtn
-              outline
-              color="primary"
-              className="w-100 mt-3"
-              onClick={() => navigate(`/quizzes/${quizId}/summary`)}
-            >
-              Terminer & Voir le Résumé
-            </MDBBtn>
           </MDBCardBody>
         </MDBCard>
       </MDBContainer>

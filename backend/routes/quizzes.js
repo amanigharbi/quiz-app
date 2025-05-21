@@ -78,5 +78,23 @@ router.put("/:id", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la mise à jour." });
   }
 });
+// routes/quizzes.js
+
+router.delete("/questions/:id", async (req, res) => {
+  const questionId = req.params.id;
+
+  try {
+    // Supprimer d'abord les réponses liées
+    await db.execute("DELETE FROM answers WHERE question_id = ?", [questionId]);
+
+    // Puis supprimer la question
+    await db.execute("DELETE FROM questions WHERE id = ?", [questionId]);
+
+    res.json({ message: "Question supprimée." });
+  } catch (err) {
+    console.error("Erreur suppression question:", err.message);
+    res.status(500).json({ error: "Erreur lors de la suppression." });
+  }
+});
 
 module.exports = router;
