@@ -1,19 +1,21 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   MDBContainer,
   MDBCard,
   MDBCardBody,
+  MDBTextArea,
   MDBInput,
   MDBCheckbox,
   MDBBtn,
-  MDBTextArea,
+  MDBProgress,
 } from "mdb-react-ui-kit";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 
 export default function AddQuestions() {
   const { id: quizId } = useParams();
+  const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
 
   const [questionText, setQuestionText] = useState("");
@@ -24,12 +26,26 @@ export default function AddQuestions() {
     { text: "", is_correct: false },
   ]);
   const [message, setMessage] = useState("");
+  const [step, setStep] = useState(1);
+  const [totalQuestions, setTotalQuestions] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const handleAnswerChange = (index, key, value) => {
     const updated = [...answers];
     updated[index][key] = value;
     setAnswers(updated);
+  };
+
+  const resetForm = () => {
+    setQuestionText("");
+    setAnswers([
+      { text: "", is_correct: false },
+      { text: "", is_correct: false },
+      { text: "", is_correct: false },
+      { text: "", is_correct: false },
+    ]);
+    setStep((prev) => prev + 1);
+    setTotalQuestions((prev) => prev + 1);
   };
 
   const handleSubmit = async (e) => {
@@ -52,18 +68,12 @@ export default function AddQuestions() {
       setLoading(false);
 
       if (!res.ok) {
-        setMessage("❌ " + (data.error || "Erreur lors de l'envoi."));
+        setMessage("❌ " + (data.error || "Erreur lors de l'ajout"));
         return;
       }
 
-      setMessage("✅ Question ajoutée avec succès !");
-      setQuestionText("");
-      setAnswers([
-        { text: "", is_correct: false },
-        { text: "", is_correct: false },
-        { text: "", is_correct: false },
-        { text: "", is_correct: false },
-      ]);
+      setMessage("✅ Question ajoutée !");
+      resetForm();
     } catch (err) {
       setLoading(false);
       setMessage("❌ Erreur serveur.");
@@ -71,19 +81,23 @@ export default function AddQuestions() {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ backgroundColor: "#eeeeee" }}
-    >
+    <div className="min-h-screen flex flex-col bg-light">
       <Navbar />
-      <MDBContainer className="d-flex flex-column align-items-center justify-content-center py-5 flex-grow-1">
-        <MDBCard className="w-100" style={{ maxWidth: "800px" }}>
+      <MDBContainer className="py-5 flex-grow-1">
+        <MDBCard className="mx-auto" style={{ maxWidth: "800px" }}>
           <MDBCardBody>
-            <h3 className="text-center mb-4 fw-bold">Ajouter une Question</h3>
+            <h3 className="text-center fw-bold mb-3">Étape {step} — Nouvelle Question</h3>
+
+            <MDBProgress height="8" className="mb-4">
+              <div
+                className="progress-bar"
+                style={{ width: `${Math.min(step * 20, 100)}%` }}
+              />
+            </MDBProgress>
 
             {message && (
               <div
-                className={`alert text-center mb-4 ${
+                className={`alert text-center ${
                   message.startsWith("✅") ? "alert-success" : "alert-danger"
                 }`}
               >
@@ -94,47 +108,49 @@ export default function AddQuestions() {
             <form onSubmit={handleSubmit}>
               <MDBTextArea
                 label="Texte de la question"
-                rows={3}
                 value={questionText}
+                rows={3}
                 onChange={(e) => setQuestionText(e.target.value)}
                 className="mb-4"
               />
 
-              <div className="mb-4">
-                {answers.map((a, index) => (
-                  <div key={index} className="mb-3">
-                    <MDBInput
-                      label={`Réponse ${index + 1}`}
-                      value={a.text}
-                      onChange={(e) =>
-                        handleAnswerChange(index, "text", e.target.value)
-                      }
-                      className="mb-2"
-                    />
-                    <MDBCheckbox
-                      label="Marquer comme correcte"
-                      checked={a.is_correct}
-                      onChange={(e) =>
-                        handleAnswerChange(
-                          index,
-                          "is_correct",
-                          e.target.checked
-                        )
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
+              {answers.map((a, index) => (
+                <div key={index} className="mb-3">
+                  <MDBInput
+                    label={`Réponse ${index + 1}`}
+                    value={a.text}
+                    onChange={(e) =>
+                      handleAnswerChange(index, "text", e.target.value)
+                    }
+                    className="mb-2"
+                  />
+                  <MDBCheckbox
+                    label="Marquer comme correcte"
+                    checked={a.is_correct}
+                    onChange={(e) =>
+                      handleAnswerChange(index, "is_correct", e.target.checked)
+                    }
+                  />
+                </div>
+              ))}
 
               <MDBBtn
                 type="submit"
-                color="success"
-                className="w-100"
+                className="w-100 mt-3"
                 disabled={loading || !questionText.trim()}
               >
                 {loading ? "Ajout en cours..." : "Ajouter la question"}
               </MDBBtn>
             </form>
+
+            <MDBBtn
+              outline
+              color="primary"
+              className="w-100 mt-3"
+              onClick={() => navigate(`/quizzes/${quizId}/summary`)}
+            >
+              Terminer & Voir le Résumé
+            </MDBBtn>
           </MDBCardBody>
         </MDBCard>
       </MDBContainer>

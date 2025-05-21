@@ -6,9 +6,10 @@ import ForgotPassword from "./components/Auth/ForgotPassword";
 import ResetPassword from "./components/Auth/ResetPassword";
 import Dashboard from "./components/pages/DashboardLayout/Dashboard";
 import PrivateRoute from "./components/routes/PrivateRoute";
-import CreateQuiz from "./components/pages/Quizzes/CreateQuiz";
 import AddQuestions from "./components/pages/Quizzes/AddQuestions";
 import CreateQuizStepper from "./components/pages/Quizzes/CreateQuizStepper";
+import QuizSummary from "./components/pages/Quizzes/QuizSummary";
+import QuizStepView from "./components/pages/Quizzes/QuizStepView";
 
 import "./App.css";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
@@ -31,14 +32,7 @@ export default function App() {
               </PrivateRoute>
             }
           />
-          {/* <Route
-            path="/create-quiz"
-            element={
-              <PrivateRoute>
-                <CreateQuiz />
-              </PrivateRoute>
-            }
-          /> */}
+
           <Route
             path="/create-quiz"
             element={
@@ -48,10 +42,26 @@ export default function App() {
             }
           />
           <Route
+            path="/quizzes/:id/view"
+            element={
+              <PrivateRoute>
+                <QuizStepView />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/quizzes/:id/add-questions"
             element={
               <PrivateRoute>
                 <AddQuestions />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/quizzes/:id/summary"
+            element={
+              <PrivateRoute>
+                <QuizSummary />
               </PrivateRoute>
             }
           />
