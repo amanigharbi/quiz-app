@@ -58,6 +58,7 @@ function Login() {
 
       setSuccess("Connexion réussie ! Redirection...");
       localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user)); // ✅ Correct
       setUser(data.user);
       setTimeout(() => navigate("/dashboard"), 1500);
     } catch (err) {

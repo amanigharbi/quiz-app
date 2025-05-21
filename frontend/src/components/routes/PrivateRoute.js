@@ -3,11 +3,13 @@ import { Navigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 export default function PrivateRoute({ children }) {
-  const { user } = useContext(AuthContext);
+  const { user, isLoading } = useContext(AuthContext);
 
-  // Redirige vers /login si l'utilisateur n'est pas connecté
-  console.log("PrivateRoute user:", user);
-  if (!user) {
+  if (isLoading) {
+    return <div>Chargement...</div>; // ou un spinner
+  }
+
+  if (user === null) {
     return <Navigate to="/login" replace />;
   }
 
