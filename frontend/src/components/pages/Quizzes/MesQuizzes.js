@@ -119,7 +119,10 @@ export default function MesQuizzes() {
   const totalPages = Math.ceil(quizzes.length / quizzesPerPage);
 
   return (
-    <div className="min-h-screen d-flex flex-column bg-light">
+    <div
+      className="min-h-screen d-flex flex-column"
+      style={{ backgroundColor: "#eeeeee" }}
+    >
       <Navbar />
       <MDBContainer className="py-2 flex-grow-1">
         <h3 className="text-center fw-bold mb-4">📝 Mes Quizzes</h3>

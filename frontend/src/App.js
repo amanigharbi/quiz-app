@@ -14,6 +14,7 @@ import EditQuestion from "./components/pages/Quizzes/EditQuestion";
 import MesQuizzes from "./components/pages/Quizzes/MesQuizzes";
 import StartQuizWithTimer from "./components/pages/Quizzes/StartQuizWithTimer";
 import ResultQuiz from "./components/pages/Quizzes/ResultQuiz";
+import HistoriqueQuiz from "./components/pages/Quizzes/HistoriqueQuiz";
 import "./App.css";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 
@@ -76,6 +77,8 @@ export default function App() {
           />
           <Route path="/quizzes/:id/start" element={<StartQuizWithTimer />} />
           <Route path="/quizzes/:id/result" element={<ResultQuiz />} />
+          <Route path="/historique" element={<HistoriqueQuiz />} />
+
         </Routes>
       </AuthProvider>
     </Router>

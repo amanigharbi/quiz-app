@@ -236,5 +236,63 @@ router.get("/:id/scores", async (req, res) => {
     res.status(500).json({ error: "Erreur lors du chargement des scores." });
   }
 });
+router.get("/user/:userId/history", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const [rows] = await db.execute(
+      `
+      SELECT q.title,s.quiz_id, s.score, s.duration_seconds, s.completed_at
+      FROM scores s
+      JOIN quizzes q ON s.quiz_id = q.id
+      WHERE s.user_id = ?
+      ORDER BY s.completed_at DESC
+      `,
+      [userId]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error("Erreur historique:", err.message);
+    res
+      .status(500)
+      .json({ error: "Erreur lors du chargement de l'historique." });
+  }
+});
+router.get("/history/:quizId/:userId", async (req, res) => {
+  const { quizId, userId } = req.params;
+
+  try {
+    const [quiz] = await db.execute(
+      "SELECT score, duration_seconds, completed_at FROM scores WHERE quiz_id = ? AND user_id = ? ORDER BY completed_at DESC LIMIT 1",
+      [quizId, userId]
+    );
+
+    if (quiz.length === 0)
+      return res.status(404).json({ error: "Aucun score trouvé" });
+
+    const [questions] = await db.execute(
+      "SELECT id, question_text FROM questions WHERE quiz_id = ?",
+      [quizId]
+    );
+
+    const detailed = [];
+
+    for (const q of questions) {
+      const [answers] = await db.execute(
+        "SELECT id, answer_text, is_correct FROM answers WHERE question_id = ?",
+        [q.id]
+      );
+      detailed.push({ question: q.question_text, answers });
+    }
+
+    res.json({
+      ...quiz[0],
+      quiz_id: quizId,
+      details: detailed,
+    });
+  } catch (err) {
+    console.error("Erreur historique complet:", err.message);
+    res.status(500).json({ error: "Erreur lors du chargement." });
+  }
+});
 
 module.exports = router;

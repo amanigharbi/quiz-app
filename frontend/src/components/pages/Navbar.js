@@ -1,9 +1,12 @@
 import { MDBIcon } from "mdb-react-ui-kit";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
+  const location = useLocation();
+  const isActive = (path) => location.pathname.startsWith(path);
+
   const handleLogout = () => {
     logout();
   };
@@ -27,19 +30,32 @@ export default function Navbar() {
           </a>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link to="/dashboard" className="nav-link">
+              <Link
+                to="/dashboard"
+                className={`nav-link ${isActive("/dashboard") ? "active" : ""}`}
+              >
                 🏠 Dashboard
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/mes-quizzes" className="nav-link">
+              <Link
+                to="/mes-quizzes"
+                className={`nav-link ${
+                  isActive("/mes-quizzes") ? "active" : ""
+                }`}
+              >
                 📝 Mes Quizes
-              </Link>{" "}
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
-                Historique des Quizes
-              </a>
+              <Link
+                to="/historique"
+                className={`nav-link ${
+                  isActive("/historique") ? "active" : ""
+                }`}
+              >
+                📊 Historique des Quizzes
+              </Link>
             </li>
           </ul>
         </div>

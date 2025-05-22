@@ -20,7 +20,7 @@ import {
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import autoTable from "jspdf-autotable";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export default function QuizSummary() {
@@ -43,16 +43,40 @@ export default function QuizSummary() {
       .catch(() => setLoading(false));
   }, [quizId]);
 
-  const handleExportPDF = async () => {
-    const input = document.getElementById("quiz-summary");
-    const canvas = await html2canvas(input);
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF();
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("quiz-summary.pdf");
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+
+    // 🔹 Exemple de contenu statique ou récupéré depuis ton state
+    const title =
+      document.getElementById("quiz-title")?.textContent || "Résumé du quiz";
+    const score = document.getElementById("quiz-score")?.textContent || "N/A";
+    const duration =
+      document.getElementById("quiz-duration")?.textContent || "N/A";
+
+    doc.setFontSize(16);
+    doc.text(title, 14, 20);
+    doc.setFontSize(12);
+    doc.text(`Score : ${score}`, 14, 30);
+    doc.text(`Durée : ${duration}`, 14, 38);
+
+    // Exemple : tableau de questions/réponses
+    const table = [
+      ["Q1: Quelle est la capitale de la France ?", "Paris ✔\nLyon\nMarseille"],
+      ["Q2: 2 + 2 ?", "3\n4 ✔\n5"],
+    ];
+
+    autoTable(doc, {
+      startY: 50,
+      head: [["Question", "Réponses"]],
+      body: table,
+      styles: { fontSize: 10, cellPadding: 3, overflow: "linebreak" },
+      columnStyles: {
+        0: { cellWidth: 60 },
+        1: { cellWidth: 120 },
+      },
+    });
+
+    doc.save("quiz-summary.pdf");
   };
   const confirmDelete = (questionId) => {
     setQuestionToDelete(questionId);

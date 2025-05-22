@@ -70,7 +70,7 @@ const Register = () => {
       });
 
       const data = await res.json();
-
+      console.log("aaaaaaaa",data);
       if (!res.ok) {
         setError(data.error || "Erreur lors de l’inscription.");
         return;

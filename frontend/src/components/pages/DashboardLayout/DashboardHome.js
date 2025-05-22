@@ -24,7 +24,10 @@ export default function DashboardHome() {
       <p className="mb-3">Choisissez une action pour commencer :</p>
 
       <div className="flex justify-center gap-x-6 gap-y-4 flex-wrap mt-4">
-        <button className="btn btn-primary flex items-center gap-2">
+        <button
+          className="btn btn-primary flex items-center gap-2"
+          onClick={() => navigate("/mes-quizzes")}
+        >
           <Gamepad2 size={18} /> Rejoindre Quiz
         </button>{" "}
         <button
@@ -33,7 +36,8 @@ export default function DashboardHome() {
         >
           <PlusCircle size={18} /> Créer Quiz
         </button>{" "}
-        <button className="btn btn-primary flex items-center gap-2">
+        <button className="btn btn-primary flex items-center gap-2"
+        onClick={() => navigate("/historique")}>
           <BarChart2 size={18} /> Voir Scores
         </button>
       </div>
