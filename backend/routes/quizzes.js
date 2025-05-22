@@ -162,5 +162,79 @@ router.delete("/:id/quiz", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la suppression du quiz." });
   }
 });
+// routes/quizzes.js
+router.post("/:id/submit", async (req, res) => {
+  const quizId = req.params.id;
+  const { user_id, answers, duration } = req.body;
+
+  try {
+    const [questions] = await db.execute(
+      "SELECT id, question_text FROM questions WHERE quiz_id = ?",
+      [quizId]
+    );
+
+    let rawScore = 0;
+    const details = [];
+
+    for (const q of questions) {
+      const [allAnswers] = await db.execute(
+        "SELECT id, answer_text, is_correct FROM answers WHERE question_id = ?",
+        [q.id]
+      );
+      const selected = answers[q.id];
+
+      const correct = allAnswers.find((a) => a.is_correct === 1)?.id;
+      if (selected && selected == correct) rawScore++;
+
+      details.push({
+        question: q.question_text,
+        selected,
+        answers: allAnswers,
+      });
+    }
+
+    const totalQuestions = questions.length;
+    const percentScore = Math.round((rawScore / totalQuestions) * 100);
+
+    // Sauvegarde du score en pourcentage
+    await db.execute(
+      "INSERT INTO scores (user_id, quiz_id, score,duration_seconds) VALUES (?, ?, ?,?)",
+      [user_id, quizId, percentScore, duration]
+    );
+
+    res.json({
+      score: percentScore,
+      rawScore,
+      totalQuestions,
+      details,
+      quiz_id: quizId,
+      duration,
+    });
+  } catch (err) {
+    console.error("Erreur submit quiz:", err.message);
+    res.status(500).json({ error: "Erreur serveur." });
+  }
+});
+
+// Classement des scores pour un quiz donné
+router.get("/:id/scores", async (req, res) => {
+  const quizId = req.params.id;
+  try {
+    const [rows] = await db.execute(
+      `
+      SELECT s.score, s.completed_at,s.duration_seconds, u.username
+      FROM scores s
+      JOIN users u ON s.user_id = u.id
+      WHERE s.quiz_id = ?
+      ORDER BY s.score DESC, s.completed_at ASC
+      `,
+      [quizId]
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error("Erreur classement scores:", err.message);
+    res.status(500).json({ error: "Erreur lors du chargement des scores." });
+  }
+});
 
 module.exports = router;

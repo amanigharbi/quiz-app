@@ -224,7 +224,7 @@ export default function MesQuizzes() {
                     color="success"
                     block
                     className="mt-3"
-                    onClick={() => navigate(`/quizzes/${quiz.id}/view`)}
+                    onClick={() => navigate(`/quizzes/${quiz.id}/start`)}
                   >
                     ▶️ Lancer le Quiz
                   </MDBBtn>
