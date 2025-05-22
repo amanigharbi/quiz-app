@@ -96,5 +96,71 @@ router.delete("/questions/:id", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la suppression." });
   }
 });
+router.get("/users/:userId/quizzes", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const [quizzes] = await db.execute(
+      "SELECT id, title, description, created_at FROM quizzes WHERE user_id = ? ORDER BY created_at DESC",
+      [userId]
+    );
+    res.json(quizzes);
+  } catch (err) {
+    console.error("Erreur chargement des quizzes:", err.message);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+router.put("/:id/quiz", async (req, res) => {
+  const quizId = req.params.id;
+  let { title, description } = req.body;
+
+  if (!title) {
+    return res.status(400).json({ error: "Le titre est requis." });
+  }
+
+  // Remplacer undefined par null
+  if (description === undefined) {
+    description = null;
+  }
+
+  try {
+    const [result] = await db.execute(
+      "UPDATE quizzes SET title = ?, description = ? WHERE id = ?",
+      [title, description, quizId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Quiz non trouvé." });
+    }
+
+    res.json({ message: "Quiz mis à jour." });
+  } catch (err) {
+    console.error("Erreur update quiz:", err.message);
+    res.status(500).json({ error: "Erreur serveur." });
+  }
+});
+
+router.delete("/:id/quiz", async (req, res) => {
+  const quizId = req.params.id;
+
+  try {
+    // Vérifier si le quiz existe
+    const [quiz] = await db.execute("SELECT * FROM quizzes WHERE id = ?", [
+      quizId,
+    ]);
+
+    if (quiz.length === 0) {
+      return res.status(404).json({ error: "Quiz introuvable." });
+    }
+
+    // Supprimer le quiz
+    await db.execute("DELETE FROM quizzes WHERE id = ?", [quizId]);
+
+    res.json({ message: "Quiz supprimé avec succès." });
+  } catch (err) {
+    console.error("Erreur suppression quiz:", err.message);
+    res.status(500).json({ error: "Erreur lors de la suppression du quiz." });
+  }
+});
 
 module.exports = router;

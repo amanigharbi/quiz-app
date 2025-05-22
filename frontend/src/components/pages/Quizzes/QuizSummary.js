@@ -98,13 +98,13 @@ export default function QuizSummary() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-light">
+    <div
+      className="min-h-screen flex flex-col "
+      style={{ backgroundColor: "#eeeeee" }}
+    >
       <Navbar />
-      <MDBContainer className="py-5 flex-grow-1">
-        <MDBCard
-          className="mx-auto"
-          style={{ maxWidth: "900px", backgroundColor: "#eeeeee" }}
-        >
+      <MDBContainer className="py-2 flex-grow-1">
+        <MDBCard className="mx-auto" style={{ maxWidth: "900px" }}>
           <MDBCardBody>
             <h3 className="text-center fw-bold mb-4">Résumé du Quiz</h3>
 

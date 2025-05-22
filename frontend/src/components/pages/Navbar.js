@@ -32,9 +32,9 @@ export default function Navbar() {
               </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
-                Mes Quizes
-              </a>
+              <Link to="/mes-quizzes" className="nav-link">
+                📝 Mes Quizes
+              </Link>{" "}
             </li>
             <li className="nav-item">
               <a className="nav-link" href="#">

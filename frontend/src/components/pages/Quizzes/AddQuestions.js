@@ -55,7 +55,6 @@ export default function AddQuestions() {
     ]);
     setStep((prev) => prev + 1);
     setTotalQuestions((prev) => prev + 1);
-    setMessage("");
   };
 
   const handleSubmit = async (e) => {
