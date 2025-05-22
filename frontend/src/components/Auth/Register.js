@@ -12,7 +12,8 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -75,10 +76,10 @@ const Register = () => {
         return;
       }
 
-      setSuccess("Inscription réussie ! Redirection...");
+      toast.success("Inscription réussie ! Redirection...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
-      setError("Erreur de connexion au serveur.");
+      toast.error("Erreur de connexion au serveur.");
     }
   };
 
@@ -261,6 +262,7 @@ const Register = () => {
           </MDBCol>
         </MDBRow>
       </MDBCard>
+      <ToastContainer position="top-right" autoClose={1500} />
     </MDBContainer>
   );
 };

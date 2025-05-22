@@ -12,7 +12,8 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
@@ -64,11 +65,11 @@ export default function ResetPassword() {
       if (!res.ok) {
         setError(data.error || "Erreur lors de la réinitialisation.");
       } else {
-        setMessage("Mot de passe mis à jour. Redirection...");
+        toast.success("Mot de passe mis à jour. Redirection...");
         setTimeout(() => navigate("/login"), 2000);
       }
     } catch {
-      setError("Erreur de connexion au serveur.");
+      toast.error("Erreur de connexion au serveur.");
     } finally {
       setLoading(false);
     }
@@ -203,6 +204,7 @@ export default function ResetPassword() {
           </MDBCol>
         </MDBRow>
       </MDBCard>
+      <ToastContainer position="top-right" autoClose={1500} />
     </MDBContainer>
   );
 }

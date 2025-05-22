@@ -11,7 +11,8 @@ import {
 } from "mdb-react-ui-kit";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function EditQuestion() {
   const { id: quizId, questionId } = useParams();
   const API_URL = process.env.REACT_APP_API_URL;
@@ -94,15 +95,15 @@ export default function EditQuestion() {
       setLoading(false);
 
       if (!res.ok) {
-        setMessage("❌ " + (data.error || "Erreur lors de la mise à jour."));
+        toast.error("❌ " + (data.error || "Erreur lors de la mise à jour."));
         return;
       }
 
-      setMessage("✅ Question mise à jour !");
+      toast.success("✅ Question mise à jour !");
       setTimeout(() => navigate(`/quizzes/${quizId}/summary`), 1500);
     } catch (err) {
       setLoading(false);
-      setMessage("❌ Erreur serveur.");
+      toast.error("❌ Erreur serveur.");
     }
   };
 
@@ -199,6 +200,8 @@ export default function EditQuestion() {
           </MDBCardBody>
         </MDBCard>
       </MDBContainer>
+      <ToastContainer position="top-right" autoClose={1500} />
+
       <Footer />
     </div>
   );

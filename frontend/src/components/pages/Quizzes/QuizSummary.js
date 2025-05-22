@@ -21,8 +21,8 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { toast } from "react-toastify";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function QuizSummary() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [questionToDelete, setQuestionToDelete] = useState(null);
@@ -210,6 +210,8 @@ export default function QuizSummary() {
           </MDBModalDialog>
         </MDBModal>
       </MDBContainer>
+      <ToastContainer position="top-right" autoClose={1500} />
+
       <Footer />
     </div>
   );

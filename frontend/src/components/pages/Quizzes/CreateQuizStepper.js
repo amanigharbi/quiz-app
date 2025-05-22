@@ -11,7 +11,8 @@ import { AuthContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function CreateQuizStepper() {
   const { user } = useContext(AuthContext);
   const [title, setTitle] = useState("");
@@ -55,11 +56,11 @@ export default function CreateQuizStepper() {
         return;
       }
 
-      setSuccess("Quiz créé avec succès !");
+      toast.success("Quiz créé avec succès !");
       setTimeout(() => navigate(`/quizzes/${data.id}/add-questions`), 1500);
     } catch (err) {
       setLoading(false);
-      setError("Erreur de connexion.");
+      toast.error("Erreur de connexion.");
     }
   };
 
@@ -111,6 +112,8 @@ export default function CreateQuizStepper() {
           </MDBCardBody>
         </MDBCard>
       </MDBContainer>
+      <ToastContainer position="top-right" autoClose={1500} />
+
       <Footer />
     </div>
   );

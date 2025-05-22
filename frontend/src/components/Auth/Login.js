@@ -15,7 +15,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../../styles/Pages.css";
 
 function Login() {
@@ -56,13 +57,13 @@ function Login() {
       }
       console.log("Token:", data.user);
 
-      setSuccess("Connexion réussie ! Redirection...");
+      toast.success("Connexion réussie ! Redirection...");
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user)); // ✅ Correct
+      localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
       setTimeout(() => navigate("/dashboard"), 1500);
     } catch (err) {
-      setError("Erreur de connexion au serveur.");
+      toast.error("Erreur de connexion au serveur.");
     }
   };
   const iconStyle = {
@@ -176,6 +177,7 @@ function Login() {
           </MDBCol>
         </MDBRow>
       </MDBCard>
+      <ToastContainer position="top-right" autoClose={1500} />
     </MDBContainer>
   );
 }

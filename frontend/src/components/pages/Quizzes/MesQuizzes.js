@@ -23,8 +23,8 @@ import {
 import { AuthContext } from "../../../context/AuthContext";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
-import { toast } from "react-toastify";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function MesQuizzes() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -234,6 +234,8 @@ export default function MesQuizzes() {
           ))}
         </MDBRow>
       </MDBContainer>
+      <ToastContainer position="top-right" autoClose={1500} />
+
       <MDBModal
         open={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}

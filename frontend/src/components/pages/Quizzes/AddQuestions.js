@@ -12,7 +12,8 @@ import {
 } from "mdb-react-ui-kit";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function AddQuestions() {
   const { id: quizId } = useParams();
   const navigate = useNavigate();
@@ -98,11 +99,11 @@ export default function AddQuestions() {
         return;
       }
 
-      setMessage("✅ Question ajoutée !");
+      toast.success("✅ Question ajoutée !");
       resetForm();
     } catch (err) {
       setLoading(false);
-      setMessage("❌ Erreur serveur.");
+      toast.error("❌ Erreur serveur.");
     }
   };
 
@@ -208,6 +209,8 @@ export default function AddQuestions() {
           </MDBCardBody>
         </MDBCard>
       </MDBContainer>
+      <ToastContainer position="top-right" autoClose={1500} />
+
       <Footer />
     </div>
   );
