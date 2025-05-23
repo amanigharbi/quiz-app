@@ -104,12 +104,12 @@ export default function ForgotPassword() {
               </p>
 
               <div className="d-flex flex-row justify-content-start">
-                <a href="#" className="small text-muted me-1">
+                <p className="small text-muted me-1">
                   Conditions d'utilisation.
-                </a>
-                <a href="#" className="small text-muted">
+                </p>
+                <p href="#" className="small text-muted">
                   Politique de confidentialité
-                </a>
+                </p>
               </div>
             </MDBCardBody>
           </MDBCol>

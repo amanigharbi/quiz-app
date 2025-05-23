@@ -19,7 +19,6 @@ export default function Navbar() {
     >
       <div className="container-fluid">
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <a className="navbar-brand mt-2 mt-lg-0" href="#">
             <img
               src="/logo-100.png"
               height="40"
@@ -27,7 +26,6 @@ export default function Navbar() {
               alt="quiz Logo"
               loading="lazy"
             />
-          </a>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <Link
@@ -61,21 +59,7 @@ export default function Navbar() {
         </div>
 
         <div className="d-flex align-items-center">
-          <div className="dropdown">
-            <a
-              data-mdb-dropdown-init
-              className="text-reset me-3 dropdown-toggle hidden-arrow"
-              href="#"
-              id="navbarDropdownMenuLink"
-              role="button"
-              aria-expanded="false"
-            >
-              <i className="fas fa-bell"></i>
-              <span className="badge rounded-pill badge-notification bg-danger">
-                1
-              </span>
-            </a>
-          </div>
+       
           <div className="dropdown">
             <div
               className="d-flex align-items-center gap-3 bg-primary text-white radius-10 p-2"

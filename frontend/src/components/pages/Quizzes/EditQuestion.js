@@ -41,7 +41,7 @@ export default function EditQuestion() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [quizId, questionId]);
+  }, [quizId, questionId, API_URL]);
 
   const handleAnswerChange = (index, key, value) => {
     const updated = [...answers];

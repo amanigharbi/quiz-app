@@ -34,7 +34,7 @@ export default function StartQuizWithTimer() {
       .then((res) => res.json())
       .then(setQuestions)
       .catch(() => setQuestions([]));
-  }, [quizId]);
+  }, [quizId, API_URL]);
 
   // Timer de chaque question
   useEffect(() => {
@@ -52,6 +52,7 @@ export default function StartQuizWithTimer() {
     }
 
     return () => clearInterval(intervalRef.current);
+    // eslint-disable-next-line
   }, [currentIndex, finished, questions.length]);
 
   // Sélection réponse

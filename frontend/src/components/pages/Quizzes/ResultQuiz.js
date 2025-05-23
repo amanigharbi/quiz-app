@@ -28,7 +28,7 @@ export default function ResultQuiz() {
       .then(setRanking)
       .catch(() => setRanking([]));
     console.log("quiz_id reçu:", quizId);
-  }, [quizId]);
+  }, [quizId, API_URL]);
 
 const handleExportPDF = () => {
   const doc = new jsPDF();

@@ -41,7 +41,7 @@ export default function QuizSummary() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [quizId]);
+  }, [quizId, API_URL]);
 
   const handleExportPDF = () => {
     const doc = new jsPDF();

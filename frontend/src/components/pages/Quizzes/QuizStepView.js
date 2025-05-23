@@ -16,7 +16,7 @@ export default function QuizStepView() {
     fetch(`${API_URL}/quizzes/${quizId}/questions`)
       .then((res) => res.json())
       .then((data) => setQuestions(data));
-  }, [quizId]);
+  }, [quizId, API_URL]);
 
   const current = questions[currentIndex];
 

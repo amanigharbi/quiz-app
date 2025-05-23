@@ -26,6 +26,7 @@ export default function AddQuestions() {
   ]);
   const [message, setMessage] = useState("");
   const [step, setStep] = useState(1);
+  // eslint-disable-next-line 
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [loading, setLoading] = useState(false);
 

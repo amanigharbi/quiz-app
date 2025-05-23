@@ -42,7 +42,7 @@ export default function MesQuizzes() {
       .then((res) => res.json())
       .then((data) => setQuizzes(data))
       .catch(() => toast.error("Erreur lors du chargement des quizzes"));
-  }, [user]);
+  }, [user, API_URL]);
   const confirmDelete = (quiz) => {
     setQuizToDelete(quiz);
     setShowConfirmModal(true);
@@ -165,17 +165,24 @@ export default function MesQuizzes() {
                       currentPage === 1 ? "disabled" : ""
                     }`}
                   >
-                    <a
+                    <button
                       className="page-link"
-                      href="#"
                       onClick={(e) => {
                         e.preventDefault();
                         if (currentPage > 1) setCurrentPage(currentPage - 1);
                       }}
                       aria-label="Previous"
+                      style={{
+                        background: "none",
+                        border: "none",
+                        padding: 0,
+                        color: "inherit",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                      }}
                     >
                       <span aria-hidden="true">&laquo;</span>
-                    </a>
+                    </button>
                   </li>
 
                   {/* N° de pages */}
@@ -186,16 +193,15 @@ export default function MesQuizzes() {
                         currentPage === i + 1 ? "active" : ""
                       }`}
                     >
-                      <a
+                      <button
                         className="page-link"
-                        href="#"
                         onClick={(e) => {
                           e.preventDefault();
                           setCurrentPage(i + 1);
                         }}
                       >
                         {i + 1}
-                      </a>
+                      </button>
                     </li>
                   ))}
 
@@ -205,9 +211,8 @@ export default function MesQuizzes() {
                       currentPage === totalPages ? "disabled" : ""
                     }`}
                   >
-                    <a
+                    <button
                       className="page-link"
-                      href="#"
                       onClick={(e) => {
                         e.preventDefault();
                         if (currentPage < totalPages)
@@ -216,7 +221,7 @@ export default function MesQuizzes() {
                       aria-label="Next"
                     >
                       <span aria-hidden="true">&raquo;</span>
-                    </a>
+                    </button>
                   </li>
                 </ul>
               </nav>

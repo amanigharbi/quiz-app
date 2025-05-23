@@ -32,7 +32,7 @@ export default function HistoriqueQuiz() {
       .then((res) => res.json())
       .then(setHistory)
       .catch(() => setHistory([]));
-  }, [user]);
+  }, [user, API_URL]);
 
   const handleDownloadPDF = async (quizId) => {
     const res = await fetch(`${API_URL}/quizzes/history/${quizId}/${user.id}`);
