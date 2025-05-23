@@ -50,6 +50,7 @@ function Login() {
       });
 
       const data = await res.json();
+      console.log("Response:", data);
 
       if (!res.ok) {
         setError(data.error || "Erreur lors de la connexion.");

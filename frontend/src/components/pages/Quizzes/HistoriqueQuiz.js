@@ -1,7 +1,18 @@
 // pages/HistoriqueQuiz.jsx
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
+import {
+  MDBTable,
+  MDBTableHead,
+  MDBTableBody,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBCardImage,
+  MDBCardTitle,
+  MDBCardText,
+  
+} from "mdb-react-ui-kit";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import jsPDF from "jspdf";
@@ -62,8 +73,8 @@ export default function HistoriqueQuiz() {
     setShowModal(true);
   };
   if (!user) {
-  return <p className="text-center mt-5">Chargement de l'utilisateur...</p>;
-}
+    return <p className="text-center mt-5">Chargement de l'utilisateur...</p>;
+  }
 
   return (
     <div
@@ -74,7 +85,25 @@ export default function HistoriqueQuiz() {
       <div className="container py-5" style={{ height: "80vh" }}>
         <h2 className="mb-4">📚 Historique de vos Quizzes</h2>
         {history.length === 0 ? (
-          <p>Aucun quiz complété.</p>
+          <MDBCol md="6" className="mx-auto mt-2">
+            <MDBCard
+              className="text-center p-4"
+              style={{ backgroundColor: "#fff" }}
+            >
+              <MDBCardImage
+                src="https://as2.ftcdn.net/jpg/02/71/16/45/1000_F_271164519_OiWrNX7qPPXcPLs8MxcJDe67tzZekDgz.jpg"
+                position="top"
+                alt="Pas de quiz disponible"
+                style={{ maxWidth: "200px", margin: "0 auto" }}
+              />
+              <MDBCardBody>
+                <MDBCardTitle>Aucun quiz complété.</MDBCardTitle>
+                <MDBCardText>
+                  Vous n'avez pas encore passer de quiz.
+                </MDBCardText>
+              </MDBCardBody>
+            </MDBCard>
+          </MDBCol>
         ) : (
           <MDBTable striped>
             <MDBTableHead>
